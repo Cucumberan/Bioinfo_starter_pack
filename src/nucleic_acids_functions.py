@@ -28,3 +28,20 @@ def contains_T_and_U_at_the_same_time(sequences: tuple) -> bool:
         if sequence.count("T") and sequences.count("U"):
             return True
     return False
+
+
+def get_first_sequence(my_tuple: tuple or list[str]) -> str:
+    """
+    Extracts the first sequence from the input tuple, if applicable.
+
+    Args:
+        my_tuple (str or tuple): Input tuple of sequences.
+
+    Returns:
+        str or None: The first sequence if available, otherwise None.
+
+    """
+    if isinstance(my_tuple, str):
+        return my_tuple
+    elif len(my_tuple) == 1:
+        return str(my_tuple[0])
