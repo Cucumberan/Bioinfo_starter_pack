@@ -126,4 +126,37 @@ def peptide_cutter(sequence: str, enzyme: str = "trypsin") -> str:
         return f"No {enzyme} cleavage sites were found."
 
 
+def one_to_three_letter_code(sequence: str) -> str:
+    """
+    This function converts a protein sequence from one-letter amino acid code to three-letter code.
+    
+    Args:
+        sequence (str): The input protein sequence in one-letter code.
+        
+    Returns:
+        str: The converted protein sequence in three-letter code.
+    """
+    three_letter_code = [AMINO_ACIDS.get(aa.upper()) for aa in sequence]
+    return '-'.join(three_letter_code)
+
+
+def sulphur_containing_aa_counter(sequence: str) -> str:
+    """
+    This function counts sulphur-containing amino acids (Cysteine and Methionine) in a protein sequence.
+    
+    Args:
+        sequence (str): The input protein sequence in one-letter code.
+        
+    Returns:
+        str: The number of sulphur-containing amino acids in a protein sequence.
+    """
+    counter = 0
+    for aa in sequence:
+        if aa == 'C' or aa == 'M':
+            counter += 1
+    answer = str(counter)
+    return 'The number of sulphur-containing amino acids in the sequence is equal to ' + answer
+
+
+
 
