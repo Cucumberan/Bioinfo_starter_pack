@@ -1,6 +1,8 @@
 from src.fastaq_functions import check_gc_content, check_length, check_quality
 from src.nucleic_acids_functions import check_valid_sequence, contains_T_and_U_at_the_same_time, transcribe, \
     complement, reverse_complement, reverse
+from src.protein_functions import is_aa, aa_weight, count_hydroaffinity, peptide_cutter, one_to_three_letter_code, \
+    sulphur_containing_aa_counter
 
 
 def filter_fastq(seqs: dict, gc_bounds: tuple = (0, 100), length_bounds: tuple = (0, 2 ** 32),
@@ -64,5 +66,58 @@ def run_dna_rna_tools(*arguments):
         return reverse_complement(sequences)
     else:
         return "Something went wrong, please, verify the chosen procedure is written correctly"
+
+
+def run_amino_analyzer(sequence: str, procedure: str, *, weight_type: str = 'average', enzyme: str = 'trypsin'):
+    """
+    This is the main function to run the amino-analyzer.py tool.
+    
+    Args:
+        sequence (str): The input protein sequence in one-letter code.
+        procedure (str): amino-analyzer.py tool has 5 functions at all:
+            1. aa_weight - Calculate the amino acids weight in a protein sequence. Return float weight
+            weight_type = 'average': default argument for 'aa_weight' function. weight_type = 'monoisotopic' can be
+            used as a second option.
+            2. count_hydroaffinity - Count the quantity of hydrophobic and hydrophilic amino acids in a protein
+            sequence. Return list in order: hydrophobic, hydrophilic
+            3. peptide_cutter - This function identifies cleavage sites in a given peptide sequence using a specified
+            enzyme. Return list of cleavage sites enzyme = 'trypsin': default argument for 'peptide_cutter' function.
+            enzyme = 'chymotrypsin' can be used as a second option.
+            4. one_to_three_letter_code - This function converts a protein sequence from one-letter amino acid code
+            to three-letter code. Return string of amino acids in three-letter code
+            5. sulphur_containing_aa_counter - This function counts sulphur-containing amino acids in a protein
+            sequence. Return quantity of sulphur-containing amino acids.
+
+    Returns:
+        The result of the specified procedure.
+
+    Raises:
+        ValueError: If the procedure is not recognized or if the input sequence contains non-amino acid characters.
+
+    Note: - Supported amino acid characters: V, I, L, E, Q, D, N, H, W, F, Y, R, K, S, T, M, A, G, P, C, v, i, l, e,
+    q, d, n, h, w, f, y, r, k, s, t, m, a, g, p, c. - Make sure to provide a valid procedure name and sequence for
+    analysis. :param enzyme: :param sequence: :param procedure: :param weight_type:
+    """
+    procedures = ['aa_weight', 'count_hydroaffinity', 'peptide_cutter', 'one_to_three_letter_code',
+                  'sulphur_containing_aa_counter']
+    if procedure not in procedures:
+        raise ValueError(f"Incorrect procedure. Acceptable procedures: {', '.join(procedures)}")
+
+    if not is_aa(sequence):
+        raise ValueError("Incorrect sequence. Only amino acids are allowed (V, I, L, E, Q, D, N, H, W, F, Y, R, K, S, "
+                         "T, M, A, G, P, C, v, i, l, e, q, d, n, h, w, f, y, r, k, s, t, m, a, g, p, c).")
+    result = ''
+    if procedure == 'aa_weight':
+        result = aa_weight(sequence, weight_type)
+    elif procedure == 'count_hydroaffinity':
+        result = count_hydroaffinity(sequence)
+    elif procedure == 'peptide_cutter':
+        result = peptide_cutter(sequence, enzyme)
+    elif procedure == 'one_to_three_letter_code':
+        result = one_to_three_letter_code(sequence)
+    elif procedure == 'sulphur_containing_aa_counter':
+        result = sulphur_containing_aa_counter(sequence)
+    return result
+
 
 
