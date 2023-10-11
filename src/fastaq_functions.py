@@ -30,3 +30,18 @@ def check_length(sequence: str, length_bounds: tuple or int) -> bool:
         return length_bounds[0] <= seq_length <= length_bounds[1]
     else:
         return seq_length <= length_bounds
+
+
+def check_quality(quality_scores: str, quality_threshold: int) -> bool:
+    """
+    Checks if the average quality of a sequence is above a specified threshold.
+
+    Args:
+        quality_scores (str):  The quality (Phred) score for each base, represented as an ASCII character.
+        quality_threshold (int): The threshold for average quality (scale Phred33).
+
+    Returns:
+        bool: True if average quality is above threshold, False otherwise.
+    """
+    avg_quality = sum(ord(score) - 33 for score in quality_scores) / len(quality_scores)
+    return avg_quality >= quality_threshold
