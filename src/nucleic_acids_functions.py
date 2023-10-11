@@ -101,3 +101,32 @@ def reverse(sequences: tuple) -> str or list[str]:
     else:
         return [sequence[::-1] for sequence in sequences]
 
+
+def complement(sequences: tuple or list[str]) -> str or list[str]:
+    """
+    Finds the complement of DNA or RNA sequences.
+
+    Args:
+        sequences (str or iterable of str): Input sequence(s).
+
+    Returns:
+        str or list of str: Complemented sequence(s).
+    """
+    if type(sequences) == str:
+        sequences = () + (sequences,)
+    complement_sequences = []
+    for sequence in sequences:
+        complement_seq = ''
+        if sequence.count("U"):
+            nucl_complement_map = {"A": "U", "C": "G", "U": "A", "G": "C", 'a': 'u', 'c': 'g', 'u': 'a', 'g': 'c'}
+        else:
+            nucl_complement_map = {"A": "T", "C": "G", "T": "A", "G": "C", 'a': 't', 'c': 'g', 't': 'a', 'g': 'c'}
+        for nucleotide in sequence:
+            complement_seq += nucl_complement_map[nucleotide]
+        complement_sequences.append(complement_seq)
+    first_sequence = get_first_sequence(sequences)
+    if first_sequence:
+        return get_first_sequence(complement_sequences)
+    else:
+        return complement_sequences
+
