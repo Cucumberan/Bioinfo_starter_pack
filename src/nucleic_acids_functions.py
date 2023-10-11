@@ -13,3 +13,18 @@ def check_valid_sequence(sequences: tuple) -> bool:
             if nucleotide not in allowed_characters:
                 return False
     return True
+
+
+def contains_T_and_U_at_the_same_time(sequences: tuple) -> bool:
+    """
+    Checks if any sequence in the input list contains both 'T' and 'U' nucleotides simultaneously.
+    Args:
+        sequences (iterable of str): List of sequences to be checked.
+    Returns:
+        bool: True if any sequence contains both 'T' and 'U', False otherwise.
+    """
+    for sequence in sequences:
+        sequence = sequence.upper()
+        if sequence.count("T") and sequences.count("U"):
+            return True
+    return False
