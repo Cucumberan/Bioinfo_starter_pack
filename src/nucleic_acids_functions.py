@@ -64,3 +64,23 @@ def is_dna(sequences: tuple) -> bool:
                 return False
     return True
 
+
+def transcribe(sequences: tuple) -> str or list[str]:
+    """
+    Transcribes DNA sequences to RNA sequences.
+
+    Args:
+        sequences (iterable of str): List of DNA sequences to be transcribed.
+
+    Returns:
+        str or list of str: Transcribed RNA sequence(s).
+    """
+    for sequence in sequences:
+        if not is_dna(sequence):
+            raise ValueError("At least one of your sequences is RNA instead of DNA, and RNA can not be transcribed")
+    first_sequence = get_first_sequence(sequences)
+    if first_sequence:
+        return first_sequence.replace("T", "U").replace('t', 'u')
+    else:
+        return [sequence.replace("T", "U").replace('t', 'u') for sequence in sequences]
+
