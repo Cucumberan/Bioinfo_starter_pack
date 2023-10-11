@@ -69,3 +69,61 @@ def aa_weight(seq: str, weight: str = 'average') -> float:
     for aa in seq.upper():
         final_weight += weights_aa[aa]
     return round(final_weight, 3)
+
+
+def count_hydroaffinity(seq: str) -> list:
+    """
+    Count the quantity of hydrophobic and hydrophilic amino acids in a protein sequence.
+
+    Args:
+        seq (str): The protein sequence for which to count hydrophobic and hydrophilic amino acids.
+
+    Returns:
+        tuple: A tuple containing the count of hydrophobic and hydrophilic amino acids, respectively.
+    """
+    hydrophobic_count = 0
+    hydrophilic_count = 0
+    seq = seq.upper()
+
+    for aa in seq:
+        if aa in HYDROPHOBIC_AA:
+            hydrophobic_count += 1
+        elif aa in HYDROPHILIC_AA:
+            hydrophilic_count += 1
+
+    return [hydrophobic_count, hydrophilic_count]
+
+
+def peptide_cutter(sequence: str, enzyme: str = "trypsin") -> str:
+    """
+    This function identifies cleavage sites in a given peptide sequence using a specified enzyme.
+    
+    Args: sequence (str): The input peptide sequence. enzyme (str): The enzyme to be used for cleavage. Choose
+    between "trypsin" and "chymotrypsin". Default is "trypsin".
+        
+    Returns: str: A message indicating the number and positions of cleavage sites, or an error message if an invalid
+    enzyme is provided.
+    """
+    cleavage_sites = []
+    if enzyme not in ("trypsin", "chymotrypsin"):
+        return "You have chosen an enzyme that is not provided. Please choose between trypsin and chymotrypsin."
+
+    if enzyme == "trypsin":  # Trypsin cuts peptide chains mainly at the carboxyl side of the amino acids lysine or
+        # arginine.
+        for aa in range(len(sequence) - 1):
+            if sequence[aa] in ['K', 'R', 'k', 'r'] and sequence[aa + 1] not in ['P', 'p']:
+                cleavage_sites.append(aa + 1)
+
+    if enzyme == "chymotrypsin":  # Chymotrypsin preferentially cleaves at Trp, Tyr and Phe in position P1(high
+        # specificity)
+        for aa in range(len(sequence) - 1):
+            if sequence[aa] in ['W', 'Y', 'F', 'w', 'y', 'f'] and sequence[aa + 1] not in ['P', 'p']:
+                cleavage_sites.append(aa + 1)
+
+    if cleavage_sites:
+        return f"Found {len(cleavage_sites)} {enzyme} cleavage sites at positions {', '.join(map(str, cleavage_sites))}"
+    else:
+        return f"No {enzyme} cleavage sites were found."
+
+
+
