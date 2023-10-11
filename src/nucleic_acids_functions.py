@@ -130,3 +130,16 @@ def complement(sequences: tuple or list[str]) -> str or list[str]:
     else:
         return complement_sequences
 
+
+def reverse_complement(sequences: tuple) -> str or list[str]:
+    """
+    Finds the reverse complement of DNA or RNA sequences.
+
+    Args:
+        sequences (str or iterable of str): Input sequence(s).
+
+    Returns:
+        str or list of str: Reverse complemented sequence(s).
+    """
+    return complement(reverse(sequences))
+
