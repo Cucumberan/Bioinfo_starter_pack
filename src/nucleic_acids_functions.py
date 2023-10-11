@@ -45,3 +45,22 @@ def get_first_sequence(my_tuple: tuple or list[str]) -> str:
         return my_tuple
     elif len(my_tuple) == 1:
         return str(my_tuple[0])
+
+
+def is_dna(sequences: tuple) -> bool:
+    """
+    Checks if all sequences in the input list consist only of valid DNA characters.
+
+    Args:
+        sequences (iterable of str): List of sequences to be validated.
+
+    Returns:
+        bool: True if all sequences are valid DNA, False otherwise.
+    """
+    allowed_characters = set('ATGCatgc')
+    for sequence in sequences:
+        for nucleotide in sequence:
+            if nucleotide not in allowed_characters:
+                return False
+    return True
+
