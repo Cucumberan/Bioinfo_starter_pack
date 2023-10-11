@@ -84,3 +84,20 @@ def transcribe(sequences: tuple) -> str or list[str]:
     else:
         return [sequence.replace("T", "U").replace('t', 'u') for sequence in sequences]
 
+
+def reverse(sequences: tuple) -> str or list[str]:
+    """
+    Reverses the input sequences.
+
+    Args:
+        sequences (iterable of str): List of sequences to be reversed.
+
+    Returns:
+        str or list of str: Reversed sequence(s).
+    """
+    first_sequence = get_first_sequence(sequences)
+    if first_sequence:
+        return first_sequence[::-1]
+    else:
+        return [sequence[::-1] for sequence in sequences]
+
