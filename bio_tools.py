@@ -1,27 +1,30 @@
-from src.fastaq_functions import check_gc_content, check_length, check_quality
+from src.fastaq_functions import check_gc_content, check_length, check_quality, read_fastaq, save_fastq_from_dict
 from src.nucleic_acids_functions import check_valid_sequence, contains_T_and_U_at_the_same_time, transcribe, \
     complement, reverse_complement, reverse
 from src.protein_functions import is_aa, aa_weight, count_hydroaffinity, peptide_cutter, one_to_three_letter_code, \
     sulphur_containing_aa_counter
 
 
-def filter_fastq(seqs: dict, gc_bounds: tuple = (0, 100), length_bounds: tuple = (0, 2 ** 32),
+def filter_fastq(input_path: str, output_filename: str = None, gc_bounds: tuple = (0, 100), length_bounds: tuple = (0, 2 ** 32),
                  quality_threshold: int = 0) -> dict:
     """
-    Filters a dictionary of FASTQ sequences based on specified criteria.
+        Filters a dictionary of FASTQ sequences based on specified criteria. Saves the output FASTAQ file.
 
-    Args:
-        1. seqs (dict): Dictionary of sequences. Keys are sequence names, values are tuples of (0) sequence and (1)
-        quality scores.
-        2. gc_bounds (tuple or float, optional): Tuple with lower and upper bounds or a single float
-        representing the upper bound for GC content (default is (0, 100)).
-        3. length_bounds (tuple or int, optional): Tuple with lower and upper bounds or a single integer representing
-        the upper bound for sequence length (default is (0, 2**32)).
-        4. quality_threshold (int, optional): The threshold for average quality (default is 0).
+        Args:
+            input_path (str): Path to the input FASTQ file.
+            output_filename (str, optional): Name of the output FASTQ file. If not provided,
+                the filtered sequences will not be saved to a file (default is None).
+            gc_bounds (tuple or float, optional): Tuple with lower and upper bounds or a single float
+                representing the upper bound for GC content (default is (0, 100)).
+            length_bounds (tuple or int, optional): Tuple with lower and upper bounds or a single integer
+                representing the upper bound for sequence length (default is (0, 2**32)).
+            quality_threshold (int, optional): The threshold for average quality (default is 0).
 
-    Returns:
-        dict: Filtered dictionary of sequences.
-    """
+        Returns:
+            dict: Filtered dictionary of sequences. Keys are sequence names, values are tuples of
+            (0) sequence and (1) quality scores.
+        """
+    seqs = read_fastaq(input_path)
     filtered_seqs = {}
 
     for seq_name, (sequence, quality) in seqs.items():
@@ -35,7 +38,7 @@ def filter_fastq(seqs: dict, gc_bounds: tuple = (0, 100), length_bounds: tuple =
             continue
 
         filtered_seqs[seq_name] = (sequence, quality)
-
+    save_fastq_from_dict(filtered_seqs, output_filename)
     return filtered_seqs
 
 
