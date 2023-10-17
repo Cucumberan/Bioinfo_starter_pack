@@ -45,3 +45,47 @@ def check_quality(quality_scores: str, quality_threshold: int) -> bool:
     """
     avg_quality = sum(ord(score) - 33 for score in quality_scores) / len(quality_scores)
     return avg_quality >= quality_threshold
+
+
+def read_fastaq(input_path: str) -> dict:
+    """
+    Reads a FASTQ file and returns a dictionary.
+
+    Args:
+        input_path (str): The path to the FASTQ file.
+
+    Returns:
+        dict: A dictionary where keys are sequence names (starting with "@")
+              and values are tuples of (sequence (line 2), quality (line 4)).
+
+    Example:
+        Given a FASTQ file like this:
+
+        @Sequence1
+        AGCTAGCTAGCTAGCT
+        +
+        !@#$!@#$!@#$!@#$
+        @Sequence2
+        CGATCGATCGATCGAT
+        +
+        !@#$!@#$!@#$!@#$
+
+        The function will return:
+        {'@Sequence1': ('AGCTAGCTAGCTAGCT', '!@#$!@#$!@#$!@#$'),
+         '@Sequence2': ('CGATCGATCGATCGAT', '!@#$!@#$!@#$!@#$')}
+
+    """
+    seqs = {}
+    with open(input_path) as fastaq:
+        lines = fastaq.readlines()
+        number_of_line = 0
+        while number_of_line < len(lines):
+            if lines[number_of_line].startswith("@"):
+                name = lines[number_of_line].strip()
+                sequence = lines[number_of_line + 1].strip()
+                quality = lines[number_of_line + 3].strip()
+                seqs[name] = (sequence, quality)
+                number_of_line += 4
+            else:
+                number_of_line += 1
+    return seqs
