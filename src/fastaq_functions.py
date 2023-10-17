@@ -1,3 +1,6 @@
+import os
+
+
 def check_gc_content(sequence: str, gc_bounds: tuple or float) -> bool:
     """
     Checks if the GC content of a sequence is within the specified bounds.
@@ -89,3 +92,31 @@ def read_fastaq(input_path: str) -> dict:
             else:
                 number_of_line += 1
     return seqs
+
+
+def save_fastq_from_dict(filtered_seqs: dict, output_filename=None) -> None:
+    """
+    Save sequences from a dictionary to a FASTQ file.
+
+    Args:
+        filtered_seqs (dict): A dictionary where keys are sequence names and values
+                              are tuples of (sequence, quality).
+        output_filename (str, optional): The output filename. If not provided,
+                                         the default is 'fastq_filtrator_results/filtered_data.fastq'.
+
+    Returns:
+        None
+
+    """
+    if not output_filename:
+        output_filename = 'fastq_filtrator_results/filtered_data.fastq'
+    else:
+        output_filename = f'fastq_filtrator_results/{output_filename}.fastq'
+
+    output_folder = os.path.dirname(output_filename)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    with open(output_filename, 'w') as output_file:
+        for name, (sequence, quality) in filtered_seqs.items():
+            output_file.write(f'{name}\n{sequence}\n+\n{quality}\n')
