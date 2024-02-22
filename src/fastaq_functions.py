@@ -35,19 +35,37 @@ def check_length(sequence: str, length_bounds: tuple or int) -> bool:
         return seq_length <= length_bounds
 
 
-def check_quality(quality_scores: str, quality_threshold: int) -> bool:
+def check_quality(quality_scores, quality_threshold: int) -> bool:
     """
-    Checks if the average quality of a sequence is above a specified threshold.
+    Checks the average quality of a sequence, accepting both preprocessed numerical quality scores
+    and raw ASCII character quality scores.
+
+    This function allows for flexible handling of quality scores, whether they come directly from FASTQ files
+    as ASCII characters or have been preprocessed into numerical scores. It calculates the average quality
+    and compares it to a specified threshold to determine if the sequence meets the quality criteria.
 
     Args:
-        quality_scores (str):  The quality (Phred) score for each base, represented as an ASCII character.
-        quality_threshold (int): The threshold for average quality (scale Phred33).
+        quality_scores: Numerical list of quality scores or a string of ASCII quality characters.
+        quality_threshold (int): The threshold for average quality.
 
     Returns:
-        bool: True if average quality is above threshold, False otherwise.
+        bool: True if the average quality is above the threshold, False otherwise.
+
+    Raises:
+        ValueError: If `quality_scores` is neither a string nor a list/tuple.
     """
-    avg_quality = sum(ord(score) - 33 for score in quality_scores) / len(quality_scores)
+    # If quality_scores is a string, assume these are ASCII characters, raw data from a FASTQ file
+    if isinstance(quality_scores, str):
+        avg_quality = sum(ord(score) - 33 for score in quality_scores) / len(quality_scores)
+    # If quality_scores is a list or tuple, assume these are numerical quality scores
+    elif isinstance(quality_scores, (list, tuple)):
+        avg_quality = sum(quality_scores) / len(quality_scores)
+    else:
+        raise ValueError("quality_scores must be either a string or a list/tuple")
+
     return avg_quality >= quality_threshold
+
+
 
 
 def read_fastaq(input_path: str) -> dict:

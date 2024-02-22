@@ -4,6 +4,10 @@ from src.nucleic_acids_functions import check_valid_sequence, contains_T_and_U_a
 from src.protein_functions import is_aa, aa_weight, count_hydroaffinity, peptide_cutter, one_to_three_letter_code, \
     sulphur_containing_aa_counter
 
+from Bio import SeqIO
+from Bio.SeqUtils import gc_fraction
+from Bio.Seq import Seq
+
 
 def filter_fastq(input_path: str, output_filename: str = None, gc_bounds: tuple = (0, 100), length_bounds: tuple = (0, 2 ** 32),
                  quality_threshold: int = 0) -> dict:
@@ -38,7 +42,38 @@ def filter_fastq(input_path: str, output_filename: str = None, gc_bounds: tuple 
             continue
 
         filtered_seqs[seq_name] = (sequence, quality)
+
     save_fastq_from_dict(filtered_seqs, output_filename)
+
+    return filtered_seqs
+
+
+def filter_fastq_with_Bio(input_path: str, output_filename: str = None, gc_bounds: tuple = (0, 100), length_bounds: tuple = (0, 2 ** 32), quality_threshold: int = 0) -> dict:
+    """
+    Filters FASTQ sequences from fastq format file based on specified criteria. Saves the output FASTAQ file. Uses Biopython libraries
+    """
+    filtered_seqs = {}
+    
+    for record in SeqIO.parse(input_path, "fastq"):
+        sequence = str(record.seq)
+        quality_scores = record.letter_annotations["phred_quality"]
+        gc_content =  gc_fraction(record.seq)*100
+
+        if not (gc_bounds[0] <= gc_content <= gc_bounds[1]):
+            continue
+        
+        if not (length_bounds[0] <= len(sequence) <= length_bounds[1]):
+            continue
+        
+        if not check_quality(quality_scores, quality_threshold):
+            continue
+        
+        filtered_seqs[record.id] = (sequence, quality_scores)
+    
+    if output_filename:
+        with open(output_filename, "w") as output_handle:
+            SeqIO.write((SeqIO.SeqRecord(Seq(seq), id=seq_id, description="", letter_annotations={"phred_quality": quality}) for seq_id, (seq, quality) in filtered_seqs.items()), output_handle, "fastq")
+    
     return filtered_seqs
 
 
