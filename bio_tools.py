@@ -156,7 +156,7 @@ def run_amino_analyzer(sequence: str, procedure: str, *, weight_type: str = 'ave
 import os
 
 
-def check_gc_content(sequence: str, gc_bounds: tuple or float) -> bool:
+def check_gc_content(sequence: str, gc_bounds: tuple or float) -> bool: # type: ignore
     """
     Checks if the GC content of a sequence is within the specified bounds.
     Args:
@@ -172,7 +172,7 @@ def check_gc_content(sequence: str, gc_bounds: tuple or float) -> bool:
         return gc_content <= gc_bounds
 
 
-def check_length(sequence: str, length_bounds: tuple or int) -> bool:
+def check_length(sequence: str, length_bounds: tuple or int) -> bool: # type: ignore
     """
     Checks if the length of a sequence is within the specified bounds.
 
@@ -326,7 +326,7 @@ def contains_T_and_U_at_the_same_time(sequences: tuple) -> bool:
     return False
 
 
-def get_first_sequence(my_tuple: tuple or list[str]) -> str:
+def get_first_sequence(my_tuple: tuple or list[str]) -> str: # type: ignore
     """
     Extracts the first sequence from the input tuple, if applicable.
 
@@ -361,7 +361,7 @@ def is_dna(sequences: tuple) -> bool:
     return True
 
 
-def transcribe(sequences: tuple) -> str or list[str]:
+def transcribe(sequences: tuple) -> str or list[str]: # type: ignore
     """
     Transcribes DNA sequences to RNA sequences.
 
@@ -381,7 +381,7 @@ def transcribe(sequences: tuple) -> str or list[str]:
         return [sequence.replace("T", "U").replace('t', 'u') for sequence in sequences]
 
 
-def reverse(sequences: tuple) -> str or list[str]:
+def reverse(sequences: tuple) -> str or list[str]: # type: ignore
     """
     Reverses the input sequences.
 
@@ -398,7 +398,7 @@ def reverse(sequences: tuple) -> str or list[str]:
         return [sequence[::-1] for sequence in sequences]
 
 
-def complement(sequences: tuple or list[str]) -> str or list[str]:
+def complement(sequences: tuple or list[str]) -> str or list[str]: # type: ignore
     """
     Finds the complement of DNA or RNA sequences.
 
@@ -427,7 +427,7 @@ def complement(sequences: tuple or list[str]) -> str or list[str]:
         return complement_sequences
 
 
-def reverse_complement(sequences: tuple) -> str or list[str]:
+def reverse_complement(sequences: tuple) -> str or list[str]: # type: ignore
     """
     Finds the reverse complement of DNA or RNA sequences.
 
