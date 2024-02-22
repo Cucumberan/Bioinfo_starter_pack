@@ -38,7 +38,7 @@ class NucleicAcidSequence(BiologicalSequence):
         return ''.join(self.complement_map[nucleotide] for nucleotide in self.sequence)
 
     def gc_content(self):
-        gc_content = (self.sequence.count('G') + self.sequence.count('C')) / len(self.sequence) * 100 if self.sequence else 0 
+        gc_content = (self.sequence.count('G') + self.sequence.count('C')) / len(self.sequence) if self.sequence else 0
         return gc_content
 
 class DNASequence(NucleicAcidSequence):
