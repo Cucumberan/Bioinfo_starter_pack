@@ -46,7 +46,7 @@ class TestComplement(unittest.TestCase):
         self.assertEqual(seq.complement(), "TACG")
 
 
-class TesReadFasta(unittest.TestCase):
+class TestReadFasta(unittest.TestCase):
     def test_read_fasta_file(self):
         """
         Test reading from a FASTA file using OpenFasta to ensure sequences are correctly parsed and returned as FastaRecord objects.
