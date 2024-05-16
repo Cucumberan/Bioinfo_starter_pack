@@ -51,7 +51,7 @@ class TesReadFasta(unittest.TestCase):
         """
         Test reading from a FASTA file using OpenFasta to ensure sequences are correctly parsed and returned as FastaRecord objects.
         """
-        with OpenFasta("data/example.fasta") as fasta_file:
+        with OpenFasta("data/example_fasta.fasta") as fasta_file:
             records = list(fasta_file.read_records())
             self.assertTrue(len(records) > 0)
             self.assertIsInstance(records[0], FastaRecord)
